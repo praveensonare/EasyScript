@@ -1,0 +1,27 @@
+Creating .app for mac
+
+_exec /usr/bin/osacompile -o "$I_SUPPORT/Upgrade PostgreSQL/Upgrade to PostgreSQL 13.4.app" -x "$BUILD/Resources/Upgrade to PostgreSQL 13.4.applescript"
+
+Upgrade to PostgreSQL 13.4.applescript should be something like below
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+set scriptsLocation to "/Library/Application\\ Support/Blackmagic\\ Design/DaVinci\\ Resolve\\ Project\\ Server/Prereqs/"
+set upgradeScript to scriptsLocation & "upgrade_postgres_13.4.sh"
+
+activate
+activate application "Terminal"
+tell application "Terminal"
+	set newTab to do script
+	set current settings of newTab to settings set "Pro"
+	do script "cd " & scriptsLocation & "; sudo " & upgradeScript in newTab
+	
+	set isBusy to true
+	repeat until isBusy is false
+		tell newTab
+			set isBusy to busy as boolean
+		end tell
+		delay 1 --> Check every second
+	end repeat
+	
+	activate newTab
+end tell
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
